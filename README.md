@@ -233,6 +233,10 @@ Created by `masicn init` in your project root. Edit it anytime.
 
 ## Links
 
+[![npm CLI](https://img.shields.io/npm/v/masicn.svg?style=flat-square&label=masicn)](https://www.npmjs.com/package/masicn)
+[![npm library](https://img.shields.io/npm/v/@masicn/ui.svg?style=flat-square&label=%40masicn%2Fui)](https://www.npmjs.com/package/@masicn/ui)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
+
 - **npm (CLI):** [npmjs.com/package/masicn](https://www.npmjs.com/package/masicn)
 - **npm (library):** [npmjs.com/package/@masicn/ui](https://www.npmjs.com/package/@masicn/ui)
 - **Registry:** [github.com/masicn-ui/registry](https://github.com/masicn-ui/registry)
