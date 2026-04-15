@@ -53,8 +53,13 @@ masicn is made up of several pieces that work together:
 ### Prerequisites
 
 - Node.js >= 18
-- An existing React Native project (>= 0.73)
 - CocoaPods (for iOS)
+- A **React Native CLI** project (>= 0.73) — scaffolded with:
+  ```bash
+  npx @react-native-community/cli@latest init MyApp
+  ```
+
+> **Expo is not supported yet.** masicn patches native config files (`babel.config.js`, `react-native.config.js`) in a way specific to bare React Native CLI projects. Expo support is planned.
 
 ### Step 1 — Initialize masicn
 
