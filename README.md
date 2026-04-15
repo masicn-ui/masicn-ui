@@ -25,8 +25,8 @@ The **cn** suffix is a nod to shadcn/ui — the project that inspired this copy-
 ## How It Works
 
 ```
-npx masicn init       ← sets up the design system in your project
-npx masicn add button ← copies Button.tsx into your project
+npx masicn@latest init        ← sets up the design system in your project
+npx masicn@latest add button  ← copies Button.tsx into your project
 ```
 
 That's it. You now own the code. Read it, change it, delete it — no restrictions.
@@ -64,7 +64,7 @@ masicn is made up of several pieces that work together:
 ### Step 1 — Initialize masicn
 
 ```bash
-npx masicn init
+npx masicn@latest init
 ```
 
 The wizard will:
@@ -78,9 +78,9 @@ The wizard will:
 ### Step 2 — Add components
 
 ```bash
-npx masicn add button
-npx masicn add button card input    # multiple at once
-npx masicn add                      # interactive picker
+npx masicn@latest add button
+npx masicn@latest add button card image    # multiple at once
+npx masicn@latest add                      # interactive picker
 ```
 
 Components are copied as `.tsx` source files into your `outputDir` (default: `src/shared/components`). They import from your local design system copy — not from any npm package.
@@ -192,27 +192,142 @@ const { colorMode } = useTheme(); // 'light' | 'dark'
 - **Easy to customize** — change props, styles, behavior without forking
 - **No bundle bloat** — only what you add is in your bundle
 
-The trade-off: you're responsible for applying updates when you want them. `masicn update` and `masicn diff` make this easy.
+The trade-off: you're responsible for applying updates when you want them. `masicn@latest update` and `masicn@latest diff` make this easy.
 
 ---
 
 ## CLI Commands
 
+### `init`
+
+Set up masicn in your React Native project. Run this once after creating the project.
+
 ```bash
-npx masicn init                     # set up masicn in your project
-npx masicn add button               # add a component
-npx masicn add button card input    # add multiple
-npx masicn add --all                # add everything
-npx masicn list                     # browse available components
-npx masicn list --installed         # show installed components
-npx masicn list --category form     # filter by category
-npx masicn status                   # check installed vs registry
-npx masicn update button            # update one component
-npx masicn update                   # update all
-npx masicn diff button              # see what changed
-npx masicn remove button            # remove a component
-npx masicn info button              # detailed component info + props
+npx masicn@latest init
 ```
+
+The wizard picks a color palette then:
+1. Copies the design system locally into `src/masicn/`
+2. Patches `babel.config.js` and `react-native.config.js`
+3. Installs native dependencies (`react-native-reanimated`, `react-native-gesture-handler`)
+4. Runs `pod install` on iOS
+5. Creates `masicn.json` in your project root
+
+| Flag | Description |
+|------|-------------|
+| `--interactive` | Full wizard — customize output dirs, design system mode, auto-patch `App.tsx` |
+| `--skip-install` | Skip `npm install` and `pod install` |
+
+---
+
+### `add [components...]`
+
+Copy one or more components into your project as source files.
+
+```bash
+npx masicn@latest add button               # single
+npx masicn@latest add button card modal    # multiple at once
+npx masicn@latest add                      # interactive searchable picker
+npx masicn@latest add --all                # everything
+```
+
+Files land in your `outputDir` (default: `src/shared/components`). Registry dependencies are resolved and copied automatically.
+
+| Flag | Description |
+|------|-------------|
+| `-f, --force` | Overwrite existing files without prompting |
+| `--all` | Add every available component and block |
+
+---
+
+### `list`
+
+Browse all available components and blocks.
+
+```bash
+npx masicn@latest list                          # all
+npx masicn@latest list --installed              # only installed
+npx masicn@latest list --category form          # filter by category
+```
+
+Available categories: `core` · `form` · `feedback` · `interactive` · `layout` · `navigation` · `overlay` · `blocks`
+
+| Flag | Description |
+|------|-------------|
+| `--category <category>` | Filter by category |
+| `--installed` | Show only installed components |
+
+---
+
+### `info <component>`
+
+Full details about a component — description, props table, peer dependencies, registry dependencies, and install status.
+
+```bash
+npx masicn@latest info button
+npx masicn@latest info bottom-sheet
+```
+
+---
+
+### `status`
+
+See all installed components and whether updates are available.
+
+```bash
+npx masicn@latest status
+```
+
+```
+  button        v0.0.1   ✔ up to date
+  card          v0.0.1   ✔ up to date  (modified locally)
+  bottom-sheet  v0.0.1   ✔ up to date
+```
+
+| Flag | Description |
+|------|-------------|
+| `--check-modified` | Also flag components whose local files differ from the registry (fetches remote — slightly slower) |
+
+---
+
+### `update [component]`
+
+Pull the latest version of a component from the registry.
+
+```bash
+npx masicn@latest update button    # one component
+npx masicn@latest update           # all installed components
+```
+
+| Flag | Description |
+|------|-------------|
+| `-f, --force` | Overwrite local changes without prompting |
+
+---
+
+### `diff <component>`
+
+Line-by-line diff between your local file and the current registry version — useful before deciding to update.
+
+```bash
+npx masicn@latest diff button
+```
+
+---
+
+### `remove <component>`
+
+Remove a component from your project.
+
+```bash
+npx masicn@latest remove button
+```
+
+Deletes the component files and removes the entry from `masicn.json`.
+
+| Flag | Description |
+|------|-------------|
+| `-y, --yes` | Skip the confirmation prompt |
 
 ---
 
