@@ -11,6 +11,18 @@ masicn is a shadcn/ui-style component system built for React Native. Instead of 
 
 ---
 
+## TL;DR
+
+- **Not an npm library** — the CLI copies `.tsx` source files directly into your project. You own the code.
+- **React Native CLI only** — bare RN projects (>= 0.73). Expo is not supported yet.
+- **One command to start:** `npx masicn@latest init` → picks a palette, copies the design system, installs native deps.
+- **One command per component:** `npx masicn@latest add button` → `Button.tsx` lands in `src/shared/components/`.
+- **54+ components, 17 blocks, 15 color palettes** — all built on Reanimated, strict TypeScript, full accessibility.
+- **Customize everything** — edit source directly, or use `createTheme()` to override any of 65+ semantic color tokens.
+- **No lock-in** — update on your schedule with `masicn update`, preview diffs with `masicn diff`.
+
+---
+
 ## The Name — मसि (Masi)
 
 **Pronunciation:** _muh-see_ · **मसि** (Sanskrit/Hindi) · also written **मसी**
