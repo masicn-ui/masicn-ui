@@ -491,30 +491,53 @@ The trade-off: you're responsible for applying updates when you want them. `masi
 
 ## Comparison with Other Design Systems
 
-| | masicn | NativeBase | Tamagui | Gluestack UI | React Native Paper |
+> Facts current as of 2026. Sources: official docs, GitHub repos, npm registry.
+
+### Libraries at a glance
+
+**NativeBase v3** — effectively in maintenance mode. The team that built it now maintains Gluestack UI as the successor and no longer recommends NativeBase for new projects.
+
+**Gluestack UI v3** — the active successor to NativeBase from the same team (GeekyAnts). Switched to a copy-paste architecture in v2/v3, similar in spirit to masicn and shadcn/ui. Uses NativeWind (Tailwind CSS utility classes) as its styling engine.
+
+**Tamagui** — an actively maintained cross-platform library (React Native + web). Uses a compiler to extract styles at build time. Token-based configuration via `tamagui.config.ts`. Core bundle is ~25 KB gzipped.
+
+**React Native Paper** — implements Google's Material Design v3 (Material You). Actively maintained by Callstack. Strong accessibility story, respects OS `reduceMotion`. Primarily an npm package with an optional Babel plugin for tree-shaking.
+
+---
+
+### Feature comparison
+
+| | masicn | Gluestack UI v3 | Tamagui | React Native Paper | NativeBase v3 |
 |---|---|---|---|---|---|
-| **Install model** | Copy-paste (you own the code) | npm package | npm package | npm package | npm package |
-| **Customization** | Edit source directly | Theme override | Theme config | Theme override + slots | Theme override |
-| **Bundle impact** | Only what you add | Entire library | Entire library | Entire library | Entire library |
-| **Lock-in** | None | Library updates can break | Library updates can break | Library updates can break | Library updates can break |
-| **Design system** | Local copy, fully editable | Opaque | Config-based | Config-based | Opaque |
-| **Expo support** | ❌ (RN CLI only, Expo coming) | ✅ | ✅ | ✅ | ✅ |
-| **Dark mode** | Automatic (OS + manual) | Manual | Automatic | Automatic | Manual |
-| **Animation** | Reanimated (UI thread) | None built-in | Custom (CSS-like) | Reanimated | None built-in |
-| **Accessibility** | Required — enforced in source | Partial | Partial | Good | Good |
-| **Component count** | 54+ components + 17 blocks | 40+ | 60+ | 50+ | 30+ |
-| **Custom themes** | `createTheme()` — full control | Theme object | `createTamagui()` | Theme tokens | Theme object |
-| **TypeScript** | Strict — no `any` | Partial | Strong | Strong | Partial |
-| **Primitives** | Box, Stack, Row, Text, Pressable, Surface, ... | Box, HStack, VStack, ... | View, Text, Stack, ... | Box, HStack, VStack, ... | Surface only |
+| **Install model** | Copy-paste (CLI copies `.tsx` files) | Copy-paste (CLI-based, similar model) | npm package + compiler | npm package + optional Babel plugin | npm package — ⚠️ maintenance mode |
+| **Styling approach** | Native token objects (`spacing.md`, `radius.lg`) | NativeWind / Tailwind utility classes | Compiler-extracted tokens via `tamagui.config.ts` | Material Design v3 theme object | Theme object + utility props |
+| **Bundle impact** | Only what you add | Only what you add (copy-paste) | ~25 KB gzipped core | ~200–300 KB; tree-shakeable via Babel plugin | Entire library (one reason it was replaced) |
+| **Vendor lock-in** | None — source lives in your repo | None — source lives in your repo | Low — but compiler is a build-time dependency | Moderate — tied to Material Design paradigm | Moderate — library updates can break app |
+| **Expo support** | ❌ RN CLI only (Expo planned) | ✅ Full (Expo SDK 50+, optimized for SDK 53) | ✅ Full, documented setup guides | ✅ Full | ✅ (but team recommends migrating to Gluestack) |
+| **Dark mode** | Automatic — follows OS, toggle programmatically | ✅ Built-in via theme tokens | ✅ Built-in, theme nesting supported | ✅ `MD3DarkTheme` + `useColorScheme` | ✅ Supported |
+| **Animation** | Reanimated only — UI thread, semantic spring presets | Flexible — default plugin, Reanimated, or Moti | Flexible — RN Animated, Reanimated, CSS, Motion | ✅ Built-in, respects OS `reduceMotion` | Limited — some stagger helpers |
+| **`reduceMotion` guard** | ✅ `useReducedMotion()` — enforced in every component | Depends on implementation | Respects OS preference | ✅ Respected automatically | ❌ Not built-in |
+| **Accessibility** | Enforced by convention — every component has `accessibilityRole`, `accessibilityLabel`, `accessibilityHint` | Good — built with a11y in mind | Strong — ARIA-compliant, FocusScope | Excellent — WCAG compliant, 48dp touch targets, RTL | Standard RN props only |
+| **TypeScript** | Strict — no `any`, no `@ts-ignore` | Excellent — TypeScript-first in v3 | Excellent — full type safety | Good — full types; `withTheme` limited to MD3 only | Partial — legacy definitions |
+| **Custom themes** | `createTheme()` — override any of 65+ semantic color tokens | NativeWind CSS variables / token overrides | `createTamagui()` — token overrides | `MD3LightTheme` / `MD3DarkTheme` override | Theme object override |
+| **Design philosophy** | RN-native tokens, no CSS, no external styling engine | Utility-first (Tailwind/NativeWind) | Cross-platform compiler, shared web+native tokens | Material Design spec compliance | Component-level theme props |
+| **Component count** | 54 components + 17 blocks | 50+ | 50+ | 30+ | ~40 (not growing) |
+| **Primitives** | Box, Stack, Row, Text, Pressable, Surface, Icon, Screen, ... | Box, HStack, VStack, ... | View, Text, Stack, XStack, YStack, ... | Surface (limited) | Box, HStack, VStack, ... |
+| **Cross-platform (web)** | ❌ React Native only | ✅ Web via NativeWind | ✅ First-class web support | ❌ React Native only | ❌ React Native only |
 
-### The fundamental difference
+---
 
-Every other design system ships a compiled package. When a new version of NativeBase or Gluestack drops, your app might behave differently after an `npm update`. With masicn, your components are frozen in your repo the moment you add them. You apply changes only when you explicitly run `masicn update`, and you can `masicn diff` first to review exactly what changed.
+### How to choose
 
-This makes masicn better suited for teams that:
-- Need to ship to production without surprise regressions
-- Have a designer who wants to tweak component internals
-- Are building a bespoke brand identity, not a generic app
+**Pick masicn if** you want native-feeling components with zero dependency on any styling engine, a local design system you can actually read and edit, and Reanimated animations baked in from day one. Best for teams building a bespoke brand — not a generic Material or utility-class look.
+
+**Pick Gluestack UI v3 if** you're coming from NativeBase, want Tailwind/NativeWind utility classes, or need Expo SDK 53+ support right now. The copy-paste model is similar to masicn's, but styling is CSS-first rather than RN-native.
+
+**Pick Tamagui if** you're building a cross-platform app (React Native + web) and want a compiler-based approach with a tiny core bundle. More setup complexity upfront.
+
+**Pick React Native Paper if** your product must follow Google's Material Design 3 spec exactly. Best accessibility out of all four, best choice if you're on Android-first.
+
+**Avoid NativeBase** for new projects — the team recommends migrating to Gluestack UI.
 
 ---
 
