@@ -2,9 +2,12 @@
 
 > Copy-paste React Native UI components. Own the code. Ship faster.
 
-masicn is a shadcn/ui-style component system built for React Native. Instead of installing a black-box UI library, you copy the source directly into your project — full control, zero lock-in.
+masicn is a shadcn/ui-style component system built for React Native. Instead of installing a black-box UI library, the CLI copies the source directly into your project — you own every line, full control, zero lock-in.
 
 **Built from scratch by [Manish Kumar](https://manishh.in) ([@lordofthemind](https://github.com/lordofthemind)) · Developed at [skipp.co.in](https://skipp.co.in)**
+
+[![npm CLI](https://img.shields.io/npm/v/masicn.svg?style=flat-square&label=masicn)](https://www.npmjs.com/package/masicn)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
 
 ---
 
@@ -22,29 +25,27 @@ The **cn** suffix is a nod to shadcn/ui — the project that inspired this copy-
 
 ---
 
+## Screenshots
+
+<!-- Replace the placeholders below with actual screenshots from the app -->
+
+| | | |
+|---|---|---|
+| ![Screen 1](./screenshots/1.png) | ![Screen 2](./screenshots/2.png) | ![Screen 3](./screenshots/3.png) |
+| ![Screen 4](./screenshots/4.png) | ![Screen 5](./screenshots/5.png) | ![Screen 6](./screenshots/6.png) |
+
+---
+
 ## How It Works
+
+masicn is **not a library you install and import.** Instead, the CLI copies the design system and component source files directly into your project. Your project ends up with real, editable `.tsx` files — no hidden internals, no npm dependency to maintain.
 
 ```
 npx masicn@latest init        ← sets up the design system in your project
 npx masicn@latest add button  ← copies Button.tsx into your project
 ```
 
-That's it. You now own the code. Read it, change it, delete it — no restrictions.
-
----
-
-## The Ecosystem
-
-masicn is made up of several pieces that work together:
-
-| Package | Repo | What it is |
-|---------|------|------------|
-| `masicn` (CLI) | [masicn-ui/cli](https://github.com/masicn-ui/cli) | The `npx masicn` command — init, add, update, remove |
-| `@masicn/ui` | [masicn-ui/masicn](https://github.com/masicn-ui/masicn) | Core design system: tokens, theme, primitives, hooks |
-| Registry | [masicn-ui/registry](https://github.com/masicn-ui/registry) | All component source files and metadata |
-| Playground | private | Where all components are authored and tested |
-| Gallery | private | Showcase app (coming to App Store / Play Store) |
-| Docs | private | Documentation site (coming soon) |
+After `add button`, you'll find `src/shared/components/Button/Button.tsx` in your codebase. Read it, change it, delete it — it's yours.
 
 ---
 
@@ -54,12 +55,14 @@ masicn is made up of several pieces that work together:
 
 - Node.js >= 18
 - CocoaPods (for iOS)
-- A **React Native CLI** project (>= 0.73) — scaffolded with:
+- A **React Native CLI** project (>= 0.73) scaffolded with:
   ```bash
   npx @react-native-community/cli@latest init MyApp
   ```
 
 > **Expo is not supported yet.** masicn patches native config files (`babel.config.js`, `react-native.config.js`) in a way specific to bare React Native CLI projects. Expo support is planned.
+
+---
 
 ### Step 1 — Initialize masicn
 
@@ -68,24 +71,73 @@ npx masicn@latest init
 ```
 
 The wizard will:
-1. Ask you to pick a color palette
-2. Copy the design system into your project (`src/masicn/`)
+1. Ask you to pick one of 15 color palettes
+2. Copy the entire design system into `src/masicn/` inside your project
 3. Patch `babel.config.js` and `react-native.config.js`
-4. Install native dependencies (`react-native-reanimated`, `react-native-gesture-handler`)
+4. Install native dependencies (`react-native-reanimated`, `react-native-gesture-handler`, `react-native-safe-area-context`, `react-native-svg`, `react-native-screens`)
 5. Run `pod install` on iOS
 6. Create `masicn.json` in your project root
 
-### Step 2 — Add components
+After init your project structure will look like this:
 
-```bash
-npx masicn@latest add button
-npx masicn@latest add button card image    # multiple at once
-npx masicn@latest add                      # interactive picker
+```
+MyApp/
+├── src/
+│   └── masicn/              ← the design system, now fully local
+│       ├── tokens/
+│       ├── theme/
+│       ├── primitives/
+│       ├── hooks/
+│       ├── animation/
+│       └── utils/
+├── masicn.json
+└── ...
 ```
 
-Components are copied as `.tsx` source files into your `outputDir` (default: `src/shared/components`). They import from your local design system copy — not from any npm package.
+| Flag | Description |
+|------|-------------|
+| `--interactive` | Full wizard — customize output dirs, design system mode, auto-patch `App.tsx` |
+| `--skip-install` | Skip `npm install` and `pod install` |
 
-### Step 3 — Use them
+---
+
+### Step 2 — Wrap your app with `MasicnProvider`
+
+```tsx
+import { MasicnProvider } from './masicn';
+
+export default function App() {
+  return (
+    <MasicnProvider>
+      {/* your app */}
+    </MasicnProvider>
+  );
+}
+```
+
+`MasicnProvider` handles theming, dark/light mode, and the global overlay layer for sheets, modals, and toasts.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `theme` | `'system' \| 'light' \| 'dark'` | `'system'` | Force a color mode or follow OS |
+| `palettes` | `PaletteEntry[]` | built-in palettes | Override/extend the palette list |
+
+---
+
+### Step 3 — Add components
+
+```bash
+npx masicn@latest add button               # single
+npx masicn@latest add button card modal    # multiple at once
+npx masicn@latest add                      # interactive searchable picker
+npx masicn@latest add --all               # everything
+```
+
+Files land in your `outputDir` (default: `src/shared/components`). Registry dependencies are resolved and copied automatically.
+
+---
+
+### Step 4 — Use them
 
 ```tsx
 import { Button } from './shared/components/Button';
@@ -99,27 +151,37 @@ import { Button } from './shared/components/Button';
 
 ## What You Get
 
-### 55+ Components
+### 54+ Components
 
 | Category | Components |
 |----------|-----------|
-| Core | `button` `card` `avatar` `avatar-group` `badge` `chip` `image` `link` `tag` `pin` `detail-row` `dot` `ticker` `status-dot` `read-more` |
-| Form | `text-input` `password-input` `textarea` `secure-input` `checkbox` `checkbox-group` `radio` `radio-group` `select` `slider` `range-slider` `switch` `segment` `toggle-group` |
-| Feedback | `alert` `bottom-sheet` `left-sheet` `right-sheet` `top-sheet` `modal` `spinner` `loader` `shimmer` `skeleton` `snackbar` `toast` `progress` `progress-ring` `loading-overlay` |
-| Interactive | `animated-card` `animated-number` `rating` `swipe-button` `drawer` `expandable` `dock` |
-| Layout | `masonry-grid` `refreshable-list` `refreshable-scroll-view` `screen-layout` |
-| Navigation | `accordion` `collapsible` `fab` `list-item` `search-bar` `tabs` |
-| Overlay | `context-menu` `menu` `popover` `tooltip` |
+| Display | `avatar` `avatar-group` `badge` `card` `dot` `expandable` `image` `link` `list-item` `read-more` `tag` `ticker` |
+| Feedback | `alert` `loader` `progress` `progress-ring` `shimmer` `skeleton` `snackbar` `spinner` `toast` |
+| Actions | `button` `fab` `rating` `swipe-button` |
+| Forms | `checkbox` `checkbox-group` `chip` `radio` `radio-group` `range-slider` `search-bar` `secure-input` `segment` `select` `slider` `switch` `text-input` `textarea` `toggle-group` |
+| Navigation | `accordion` `collapsible` `detail-row` `dock` `pin` `tabs` |
+| Overlays | `bottom-sheet` `context-menu` `drawer` `left-sheet` `menu` `modal` `popover` `right-sheet` `tooltip` `top-sheet` |
 
 ### 17+ Blocks
 
 Pre-composed screens and flows ready to drop in:
 
-`action-sheet` `breadcrumb` `carousel` `confirm-dialog` `date-input` `empty-state` `form` `multi-select` `number-input` `otp-input` `pagination` `phone-input` `split-sheet` `step-indicator` `swipeable` `tag-input` `timeline`
+| Block | Block | Block |
+|-------|-------|-------|
+| `action-sheet` | `breadcrumb` | `carousel` |
+| `chip-input` | `code-input` | `confirm-dialog` |
+| `date-input` | `dual-sheet` | `empty-state` |
+| `form` | `json-tree` | `numeric-input` |
+| `pagination` | `phone-input` | `stepper` |
+| `swipeable` | `timeline` | |
+
+### 3 Layout Components
+
+`masonry-grid` · `refreshable-list` · `refreshable-scroll-view`
 
 ### 15 Color Palettes
 
-Pick one during init. Switch anytime in `masicn.json`.
+Pick one during `init`. Switch anytime by editing `masicn.json`.
 
 | Palette | Vibe |
 |---------|------|
@@ -141,13 +203,13 @@ Pick one during init. Switch anytime in `masicn.json`.
 
 ---
 
-## The Design System (`@masicn/ui`)
+## The Design System
 
-All components are built on a layered design system. When you run `masicn init`, a local copy of this is placed in your project so you can read and modify it.
+After `masicn init`, your project contains a full copy of the design system at `src/masicn/`. The layers, bottom-up:
 
 ```
 src/masicn/
-├── tokens/       ← spacing, radius, typography, motion, elevation, ...
+├── tokens/       ← spacing, radius, borders, typography, motion, elevation, ...
 ├── theme/        ← 15 palettes, createTheme(), dark/light mode
 ├── primitives/   ← Box, Stack, Row, Text, Pressable, Surface, ...
 ├── hooks/        ← useTheme(), useTokens(), useReducedMotion(), ...
@@ -155,124 +217,210 @@ src/masicn/
 └── utils/        ← rgba(), clamp(), color helpers
 ```
 
-### Using tokens — always, no magic numbers
+Every component you add imports from `'../../../masicn'` (relative path inside your project) — never from any npm package. This is intentional: you can modify the design system itself without publishing anything.
+
+---
+
+### Tokens — no magic numbers
+
+Always use tokens; never raw numbers:
 
 ```tsx
+import { useTheme, useTokens } from '../masicn';
+
 const { theme } = useTheme();
 const tokens = useTokens();
 
-// Colors always from theme
-<Box style={{ backgroundColor: theme.colors.surface.primary }} />
+// colors always from theme
+<Box style={{ backgroundColor: theme.colors.surfacePrimary }} />
 
-// Spacing always from tokens
+// spacing always from tokens
 <Stack style={{ padding: tokens.spacing.md, borderRadius: tokens.radius.lg }} />
 ```
 
+**Spacing scale** (4pt grid):
+
+| Token | Value |
+|-------|-------|
+| `none` | 0 |
+| `xxs` | 2 |
+| `xs` | 4 |
+| `sm` | 8 |
+| `md` | 12 |
+| `lg` | 16 |
+| `xl` | 24 |
+| `xxl` | 32 |
+| `xxxl` | 48 |
+
+---
+
 ### Primitives
 
+Primitives are low-level layout and display components that all other components are built on. They are already in `src/masicn/primitives/` after init.
+
 ```tsx
-import { Box, Stack, Row, Text, Pressable, Surface } from '../masicn';
+import { Box, Stack, Row, Wrap, Center, Spacer, Divider, Surface, Text, Icon, Pressable, Screen } from '../masicn';
+
+// vertical list with spacing
+<Stack gap="lg">
+  <Text variant="heading">Hello</Text>
+  <Text variant="body">World</Text>
+</Stack>
+
+// horizontal row
+<Row gap="sm" align="center">
+  <Icon name="check" />
+  <Text>Confirmed</Text>
+</Row>
 ```
+
+---
 
 ### Dark mode — automatic
 
-The theme provides both `light` and `dark` variants. `MasicnProvider` handles switching.
+`MasicnProvider` reads the OS color scheme by default. Toggle programmatically:
 
 ```tsx
-const { colorMode } = useTheme(); // 'light' | 'dark'
+const { colorMode, toggleTheme } = useTheme();
+// colorMode: 'light' | 'dark'
 ```
 
 ---
 
-## Why Copy-Paste?
+### Custom Themes with `createTheme`
 
-- **You own the code** — no waiting for a maintainer to accept your PR
-- **No version hell** — components never break your app on upgrade
-- **Easy to read** — the source is right there in your project
-- **Easy to customize** — change props, styles, behavior without forking
-- **No bundle bloat** — only what you add is in your bundle
+You can override any color in the default light or dark theme using `createTheme`. All color keys are optional — you only provide what you want to change, and the rest inherits from the base palette.
 
-The trade-off: you're responsible for applying updates when you want them. `masicn@latest update` and `masicn@latest diff` make this easy.
+```tsx
+import { createTheme, MasicnProvider } from './masicn';
+
+// override brand and background colors for both modes
+const myTheme = createTheme({
+  light: {
+    colors: {
+      primary: '#6200ee',
+      onPrimary: '#ffffff',
+      background: '#f5f5f5',
+      surfacePrimary: '#ffffff',
+    },
+  },
+  dark: {
+    colors: {
+      primary: '#bb86fc',
+      onPrimary: '#000000',
+      background: '#121212',
+      surfacePrimary: '#1e1e1e',
+    },
+  },
+});
+
+// pass the custom pair to MasicnProvider
+export default function App() {
+  return (
+    <MasicnProvider palettes={[{ name: 'brand', ...myTheme }]}>
+      {/* your app */}
+    </MasicnProvider>
+  );
+}
+```
+
+**Full list of overridable color tokens:**
+
+| Group | Tokens |
+|-------|--------|
+| Background | `background` |
+| Surfaces | `surfacePrimary` `surfaceSecondary` `surfaceTertiary` `surfaceOverlay` |
+| Brand | `primary` `onPrimary` `secondary` `onSecondary` `tertiary` `onTertiary` `primaryContainer` |
+| Text | `textPrimary` `textSecondary` `textTertiary` `textDisabled` `textInverse` `textLink` |
+| Icons | `iconPrimary` `iconSecondary` `iconDisabled` |
+| Borders | `borderPrimary` `borderSecondary` `borderFocused` `separator` |
+| Inputs | `inputBackground` `inputBorder` `inputPlaceholder` |
+| Status | `error` `onError` `success` `onSuccess` `warning` `onWarning` `info` `onInfo` `accent` `onAccent` |
+| Interactive | `overlay` `highlight` `ripple` `disabled` |
+| Navigation | `card` `tabBarActive` `tabBarInactive` `tabBarBackground` |
+| Misc | `shadow` `skeleton` |
 
 ---
 
-## CLI Commands
+### Animation System
+
+All built-in components use Reanimated. Spring presets and duration values are in `src/masicn/tokens/motion.ts`:
+
+```tsx
+import { motion, motionEasing } from '../masicn';
+import { withSpring, withTiming } from 'react-native-reanimated';
+
+// spring — runs on UI thread
+withSpring(1, motion.spring.snappy)
+
+// timing with easing
+withTiming(1, { duration: motion.duration.normal, easing: motionEasing.standard })
+```
+
+**Spring presets:**
+
+| Preset | Feel |
+|--------|------|
+| `gentle` | Smooth, overdamped settle |
+| `snappy` | Fast and crisp |
+| `bouncy` | Intentionally springy |
+| `responsive` | Layout transitions |
+| `sheet` | Bottom / side sheets |
+| `snap` | Carousel snap |
+| `dialog` | Modal scale-in |
+| `check` | Checkbox pop |
+| `indicator` | Radio dot |
+
+**Duration presets:** `instant` (0ms) · `micro` (100ms) · `fast` (120ms) · `normal` (200ms) · `slow` (300ms) · `slower` (500ms) · `dramatic` (700ms)
+
+---
+
+## CLI Reference
 
 ### `init`
 
-Set up masicn in your React Native project. Run this once after creating the project.
+Set up masicn in your React Native project. Run this once.
 
 ```bash
 npx masicn@latest init
 ```
 
-The wizard picks a color palette then:
-1. Copies the design system locally into `src/masicn/`
-2. Patches `babel.config.js` and `react-native.config.js`
-3. Installs native dependencies (`react-native-reanimated`, `react-native-gesture-handler`)
-4. Runs `pod install` on iOS
-5. Creates `masicn.json` in your project root
-
-| Flag | Description |
-|------|-------------|
-| `--interactive` | Full wizard — customize output dirs, design system mode, auto-patch `App.tsx` |
-| `--skip-install` | Skip `npm install` and `pod install` |
-
----
-
 ### `add [components...]`
-
-Copy one or more components into your project as source files.
 
 ```bash
 npx masicn@latest add button               # single
-npx masicn@latest add button card modal    # multiple at once
-npx masicn@latest add                      # interactive searchable picker
-npx masicn@latest add --all                # everything
+npx masicn@latest add button card modal    # multiple
+npx masicn@latest add                      # interactive picker
+npx masicn@latest add --all               # everything
 ```
-
-Files land in your `outputDir` (default: `src/shared/components`). Registry dependencies are resolved and copied automatically.
 
 | Flag | Description |
 |------|-------------|
 | `-f, --force` | Overwrite existing files without prompting |
 | `--all` | Add every available component and block |
 
----
-
 ### `list`
 
-Browse all available components and blocks.
-
 ```bash
-npx masicn@latest list                          # all
-npx masicn@latest list --installed              # only installed
-npx masicn@latest list --category form          # filter by category
+npx masicn@latest list                       # all
+npx masicn@latest list --installed           # only installed
+npx masicn@latest list --category form       # filter by category
 ```
 
-Available categories: `core` · `form` · `feedback` · `interactive` · `layout` · `navigation` · `overlay` · `blocks`
-
-| Flag | Description |
-|------|-------------|
-| `--category <category>` | Filter by category |
-| `--installed` | Show only installed components |
-
----
+Categories: `core` · `form` · `feedback` · `interactive` · `layout` · `navigation` · `overlay` · `blocks`
 
 ### `info <component>`
 
-Full details about a component — description, props table, peer dependencies, registry dependencies, and install status.
+Full details — props table, peer dependencies, registry dependencies, install status.
 
 ```bash
 npx masicn@latest info button
 npx masicn@latest info bottom-sheet
 ```
 
----
-
 ### `status`
 
-See all installed components and whether updates are available.
+See installed components and whether updates are available.
 
 ```bash
 npx masicn@latest status
@@ -284,50 +432,26 @@ npx masicn@latest status
   bottom-sheet  v0.0.1   ✔ up to date
 ```
 
-| Flag | Description |
-|------|-------------|
-| `--check-modified` | Also flag components whose local files differ from the registry (fetches remote — slightly slower) |
-
----
-
 ### `update [component]`
-
-Pull the latest version of a component from the registry.
 
 ```bash
 npx masicn@latest update button    # one component
-npx masicn@latest update           # all installed components
+npx masicn@latest update           # all installed
 ```
-
-| Flag | Description |
-|------|-------------|
-| `-f, --force` | Overwrite local changes without prompting |
-
----
 
 ### `diff <component>`
 
-Line-by-line diff between your local file and the current registry version — useful before deciding to update.
+Line-by-line diff between your local file and the current registry version.
 
 ```bash
 npx masicn@latest diff button
 ```
 
----
-
 ### `remove <component>`
-
-Remove a component from your project.
 
 ```bash
 npx masicn@latest remove button
 ```
-
-Deletes the component files and removes the entry from `masicn.json`.
-
-| Flag | Description |
-|------|-------------|
-| `-y, --yes` | Skip the confirmation prompt |
 
 ---
 
@@ -351,16 +475,89 @@ Created by `masicn init` in your project root. Edit it anytime.
 
 ---
 
+## Why Copy-Paste?
+
+The short version: you control what ships.
+
+- **You own the code** — no waiting for a maintainer to accept your PR
+- **No version hell** — components never silently break your app on an upgrade
+- **Easy to read** — the source is right there in your editor
+- **Easy to customize** — change props, styles, behavior without forking a library
+- **No bundle bloat** — only what you add is in your bundle
+
+The trade-off: you're responsible for applying updates when you want them. `masicn update` and `masicn diff` make this easy without forcing anything on you.
+
+---
+
+## Comparison with Other Design Systems
+
+| | masicn | NativeBase | Tamagui | Gluestack UI | React Native Paper |
+|---|---|---|---|---|---|
+| **Install model** | Copy-paste (you own the code) | npm package | npm package | npm package | npm package |
+| **Customization** | Edit source directly | Theme override | Theme config | Theme override + slots | Theme override |
+| **Bundle impact** | Only what you add | Entire library | Entire library | Entire library | Entire library |
+| **Lock-in** | None | Library updates can break | Library updates can break | Library updates can break | Library updates can break |
+| **Design system** | Local copy, fully editable | Opaque | Config-based | Config-based | Opaque |
+| **Expo support** | ❌ (RN CLI only, Expo coming) | ✅ | ✅ | ✅ | ✅ |
+| **Dark mode** | Automatic (OS + manual) | Manual | Automatic | Automatic | Manual |
+| **Animation** | Reanimated (UI thread) | None built-in | Custom (CSS-like) | Reanimated | None built-in |
+| **Accessibility** | Required — enforced in source | Partial | Partial | Good | Good |
+| **Component count** | 54+ components + 17 blocks | 40+ | 60+ | 50+ | 30+ |
+| **Custom themes** | `createTheme()` — full control | Theme object | `createTamagui()` | Theme tokens | Theme object |
+| **TypeScript** | Strict — no `any` | Partial | Strong | Strong | Partial |
+| **Primitives** | Box, Stack, Row, Text, Pressable, Surface, ... | Box, HStack, VStack, ... | View, Text, Stack, ... | Box, HStack, VStack, ... | Surface only |
+
+### The fundamental difference
+
+Every other design system ships a compiled package. When a new version of NativeBase or Gluestack drops, your app might behave differently after an `npm update`. With masicn, your components are frozen in your repo the moment you add them. You apply changes only when you explicitly run `masicn update`, and you can `masicn diff` first to review exactly what changed.
+
+This makes masicn better suited for teams that:
+- Need to ship to production without surprise regressions
+- Have a designer who wants to tweak component internals
+- Are building a bespoke brand identity, not a generic app
+
+---
+
+## How Components Are Built
+
+Every masicn component follows strict conventions so the source is consistent and readable no matter which component you open:
+
+**Tokens everywhere:**
+```tsx
+// always tokens, never raw numbers
+{ padding: spacing.md, borderRadius: radius.lg }
+```
+
+**Colors always semantic:**
+```tsx
+// always from theme, never raw hex
+backgroundColor: theme.colors.surfacePrimary
+borderColor: theme.colors.borderPrimary
+```
+
+**Animation on the UI thread:**
+```tsx
+// Reanimated for all transitions — never Animated API
+const opacity = useSharedValue(0);
+const style = useAnimatedStyle(() => ({ opacity: opacity.value }));
+```
+
+**Accessibility built in:**
+```tsx
+<Pressable
+  accessibilityRole="button"
+  accessibilityLabel={label}
+  accessibilityHint={hint}
+  accessibilityState={{ disabled }}
+/>
+```
+
+---
+
 ## Links
 
-[![npm CLI](https://img.shields.io/npm/v/masicn.svg?style=flat-square&label=masicn)](https://www.npmjs.com/package/masicn)
-[![npm library](https://img.shields.io/npm/v/@masicn/ui.svg?style=flat-square&label=%40masicn%2Fui)](https://www.npmjs.com/package/@masicn/ui)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
-
 - **npm (CLI):** [npmjs.com/package/masicn](https://www.npmjs.com/package/masicn)
-- **npm (library):** [npmjs.com/package/@masicn/ui](https://www.npmjs.com/package/@masicn/ui)
 - **Registry:** [github.com/masicn-ui/registry](https://github.com/masicn-ui/registry)
-- **Design system:** [github.com/masicn-ui/masicn](https://github.com/masicn-ui/masicn)
 - **Developer:** Manish Kumar — [manishh.in](https://manishh.in) · [@lordofthemind](https://github.com/lordofthemind)
 - **Company:** [skipp.co.in](https://skipp.co.in)
 
@@ -370,7 +567,7 @@ Created by `masicn init` in your project root. Edit it anytime.
 
 [MIT](./LICENSE) — free to use, modify, and distribute. Copyright © 2026 [Skipp](https://skipp.co.in).
 
-Everything in the masicn ecosystem — the CLI, the design system library, and the component source files — is MIT licensed. When you copy a component into your project, you own that code completely. You can change it, ship it in a commercial product, or build on top of it without any restrictions. The only thing we ask is that the copyright notice is kept in place.
+Everything in the masicn ecosystem — the CLI and all component source files — is MIT licensed. When you copy a component into your project, you own that code completely. You can change it, ship it in a commercial product, or build on top of it without any restrictions.
 
 ---
 
