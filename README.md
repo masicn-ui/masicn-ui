@@ -4,7 +4,7 @@
 
 masicn is a shadcn/ui-style component system built for React Native. Instead of installing a black-box UI library, the CLI copies the source directly into your project — you own every line, full control, zero lock-in.
 
-**Built from scratch by [Manish Kumar](https://manishh.in) ([@lordofthemind](https://github.com/lordofthemind)) · Developed at [skipp.co.in](https://skipp.co.in)**
+**A personal project by [Manish Kumar](https://manishh.in) ([@lordofthemind](https://github.com/lordofthemind)) · currently at [skipp.co.in](https://skipp.co.in)**
 
 [![npm CLI](https://img.shields.io/npm/v/masicn.svg?style=flat-square&label=masicn%20CLI)](https://www.npmjs.com/package/masicn)
 [![npm design system](https://img.shields.io/npm/v/@masicn/ui.svg?style=flat-square&label=%40masicn%2Fui)](https://www.npmjs.com/package/@masicn/ui)
@@ -755,19 +755,17 @@ const reducedMotion = useReducedMotion();
 ## Links
 
 - **npm (CLI):** [npmjs.com/package/masicn](https://www.npmjs.com/package/masicn)
-- **npm (design system):** [npmjs.com/package/@masicn/ui](https://www.npmjs.com/package/@masicn/ui)
 - **Registry:** [github.com/masicn-ui/registry](https://github.com/masicn-ui/registry)
-- **Developer:** Manish Kumar — [manishh.in](https://manishh.in) · [@lordofthemind](https://github.com/lordofthemind)
-- **Company:** [skipp.co.in](https://skipp.co.in)
+- **Author:** Manish Kumar — [manishh.in](https://manishh.in) · [@lordofthemind](https://github.com/lordofthemind)
 
 ---
 
 ## License
 
-[MIT](./LICENSE) — free to use, modify, and distribute. Copyright © 2026 [Skipp](https://skipp.co.in).
+[MIT](./LICENSE) — free to use, modify, and distribute. Copyright © 2026 [Manish Kumar](https://manishh.in).
 
 Everything in the masicn ecosystem — the CLI and all component source files — is MIT licensed. When you copy a component into your project, you own that code completely. Change it, ship it in a commercial product, or build on top of it without any restrictions.
 
 ---
 
-Made with care by [Manish Kumar](https://manishh.in) at [skipp.co.in](https://skipp.co.in)
+Made with care by [Manish Kumar](https://manishh.in)
