@@ -637,7 +637,7 @@ Browse all components in a grouped multiselect TUI, resolve deps, confirm, insta
 npx masicn@latest mcp
 ```
 
-Starts a [Model Context Protocol](https://modelcontextprotocol.io) server on `stdin/stdout`. The server is a thin JSON-RPC layer on top of the CLI's `--json` API. Add to Claude Desktop (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+Starts a [Model Context Protocol](https://modelcontextprotocol.io) server on `stdin/stdout`. It speaks JSON-RPC 2.0 and gives AI tools full read+write access to your masicn setup — browse, search, inspect, diff, check health, install, update, and remove components. Add to Claude Desktop (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
@@ -647,7 +647,9 @@ Starts a [Model Context Protocol](https://modelcontextprotocol.io) server on `st
 }
 ```
 
-Tools: `list_components` · `get_component_details` · `search_components` · `install_component`
+**Read-only:** `list_components` · `get_component_details` · `search_components` · `get_installed_status` · `diff_component` · `get_dependency_graph` · `get_component_usage` · `run_health_check`
+
+**Mutating:** `install_component` · `update_component` · `remove_component`
 
 For custom integrations that don't need MCP, use `--json` directly — it's stable, synchronous, and parseable with `JSON.parse(stdout)`:
 
