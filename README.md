@@ -21,6 +21,7 @@ masicn is a shadcn/ui-style component system built for React Native. Instead of 
 - **54 components · 19 blocks · 15 color palettes** — all built on Reanimated, strict TypeScript, full accessibility.
 - **Customize everything** — edit source directly, or use `createTheme()` to override any of 53 semantic color tokens.
 - **No lock-in** — update on your schedule with `masicn update`, preview diffs with `masicn diff`.
+- **Machine-readable API** — every data command supports `--json` for clean, parseable output. Powers the built-in MCP server for AI tools (Claude, Cursor, etc.).
 
 ---
 
@@ -83,7 +84,7 @@ npx masicn@latest init
 
 The wizard will:
 1. Ask you to pick one of 15 color palettes
-2. Copy the entire design system (~91 files) into `src/masicn/`
+2. Copy the design system (~91 files) into `src/masicn/`. The selected palette is written as `theme/colors.ts` — a single editable file. `theme/light.ts` and `theme/dark.ts` are generated locally and import from it. The `theme/palettes/` directory is never copied.
 3. Download Inter, Poppins, and Outfit fonts into `assets/fonts/` and link them
 4. Patch `babel.config.js` and `react-native.config.js`
 5. Install native dependencies (`react-native-reanimated`, `react-native-gesture-handler`, `react-native-safe-area-context`, `react-native-svg`, `react-native-screens`, `react-native-worklets`)
@@ -99,7 +100,7 @@ MyApp/
 ├── src/
 │   └── masicn/              ← the design system, fully local
 │       ├── tokens/
-│       ├── theme/
+│       ├── theme/           ← colors.ts (your palette) · light.ts · dark.ts · createTheme()
 │       ├── primitives/
 │       ├── hooks/
 │       ├── animation/
@@ -228,7 +229,7 @@ After `masicn init`, your project contains a full copy of the design system at `
 ```
 src/masicn/
 ├── tokens/       ← spacing, radius, borders, typography, motion, elevation, sizes, ...
-├── theme/        ← 15 palettes, createTheme(), dark/light mode
+├── theme/        ← colors.ts (your selected palette) · light.ts · dark.ts · createTheme()
 ├── primitives/   ← Box, Stack, Row, Text, Pressable, Surface, ...
 ├── hooks/        ← useTheme(), useTokens(), useReducedMotion(), ...
 ├── animation/    ← motionEasing (standard, accelerate, decelerate, linear)
@@ -469,7 +470,7 @@ import {
 
 ## CLI Reference
 
-All commands support `--help` for inline docs.
+All commands support `--help` for inline docs. The data-returning commands (`list`, `search`, `info`, `add`, `status`, `diff`, `graph`, `usage`) also accept a global `--json` flag that switches stdout to a single deterministic JSON object — no colors, no spinners. See the [CLI README](../cli/README.md#machine-readable-output---json) for the full schema.
 
 ### `init` — first-time setup
 
@@ -500,9 +501,10 @@ npx masicn@latest add                        # interactive picker
 npx masicn@latest add --all                 # everything
 npx masicn@latest add button --dry-run      # preview without writing
 npx masicn@latest add button --force        # overwrite existing files
+npx masicn@latest add button --json         # { installed, skipped, errors, dryRun }
 ```
 
-Registry dependencies are resolved and installed automatically.
+Registry dependencies are resolved and installed automatically. `--json` requires explicit component names — the interactive picker is not supported in JSON mode.
 
 ### `update` — pull newer versions
 
@@ -512,6 +514,8 @@ npx masicn@latest update             # all installed components
 npx masicn@latest update -d          # refresh design system files from GitHub
 npx masicn@latest update -d --force  # refresh without confirmation
 ```
+
+When `-d` is used, `theme/palettes/` is never written. Only `theme/colors.ts` (your selected palette), `theme/light.ts`, and `theme/dark.ts` are refreshed.
 
 ### `remove` — uninstall a component
 
@@ -526,6 +530,7 @@ npx masicn@latest remove button --yes    # skip confirmation
 npx masicn@latest list
 npx masicn@latest list --installed
 npx masicn@latest list --category form
+npx masicn@latest list --json          # machine-readable component array
 ```
 
 ### `status` — check for updates
@@ -533,6 +538,7 @@ npx masicn@latest list --category form
 ```bash
 npx masicn@latest status
 npx masicn@latest status --check-modified    # flag locally edited files
+npx masicn@latest status --json              # { components, summary }
 ```
 
 ```
@@ -545,15 +551,17 @@ npx masicn@latest status --check-modified    # flag locally edited files
 
 ```bash
 npx masicn@latest diff button
+npx masicn@latest diff button --json   # structured { file, changes[] } — not raw text
 ```
 
-Line-by-line diff between your local file and the registry version.
+Line-by-line diff between your local file and the registry version. With `--json` each change is `{ type: "added"|"removed", lineNumber, content }`.
 
 ### `info` — component details
 
 ```bash
 npx masicn@latest info button
 npx masicn@latest info bottom-sheet
+npx masicn@latest info button --json   # full metadata as a JSON object
 ```
 
 Shows props table, peer deps, registry deps, install status, and usage examples.
@@ -564,6 +572,7 @@ Shows props table, peer deps, registry deps, install status, and usage examples.
 npx masicn@latest search button
 npx masicn@latest search "swipe gesture"
 npx masicn@latest search sheet --top 5
+npx masicn@latest search button --json    # ranked results with scores
 ```
 
 Ranked by tag match (3pts), name (2pts), description (1pt).
@@ -574,6 +583,7 @@ Ranked by tag match (3pts), name (2pts), description (1pt).
 npx masicn@latest graph               # full ecosystem
 npx masicn@latest graph avatar-group  # single component
 npx masicn@latest graph --cycles      # detect circular dependencies
+npx masicn@latest graph --json        # { nodes, edges, cycles } adjacency list
 ```
 
 ### `usage` — scan your project
@@ -582,6 +592,7 @@ npx masicn@latest graph --cycles      # detect circular dependencies
 npx masicn@latest usage
 npx masicn@latest usage --unused      # only show components with zero usages
 npx masicn@latest usage --src app/src
+npx masicn@latest usage --json        # { scannedFiles, components[] } with file paths
 ```
 
 ### `upgrade` — one-step refresh
@@ -590,6 +601,8 @@ npx masicn@latest usage --src app/src
 npx masicn@latest upgrade             # design system + all components
 npx masicn@latest upgrade --channel dev
 ```
+
+Refreshes the design system (same palette-safe behavior as `update -d`) then updates all installed components to their latest versions — in one step, non-interactively.
 
 ### `migrate` — apply breaking changes
 
@@ -629,7 +642,7 @@ Browse all components in a grouped multiselect TUI, resolve deps, confirm, insta
 npx masicn@latest mcp
 ```
 
-Starts a [Model Context Protocol](https://modelcontextprotocol.io) server on `stdin/stdout`. Add to Claude Desktop (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+Starts a [Model Context Protocol](https://modelcontextprotocol.io) server on `stdin/stdout`. It speaks JSON-RPC 2.0 and gives AI tools full read+write access to your masicn setup — browse, search, inspect, diff, check health, install, update, and remove components. Add to Claude Desktop (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
@@ -639,7 +652,15 @@ Starts a [Model Context Protocol](https://modelcontextprotocol.io) server on `st
 }
 ```
 
-Tools: `list_components` · `get_component_details` · `search_components` · `install_component`
+**Read-only:** `list_components` · `get_component_details` · `search_components` · `get_installed_status` · `diff_component` · `get_dependency_graph` · `get_component_usage` · `run_health_check`
+
+**Mutating:** `install_component` · `update_component` · `remove_component`
+
+For custom integrations that don't need MCP, use `--json` directly — it's stable, synchronous, and parseable with `JSON.parse(stdout)`:
+
+```bash
+npx masicn@latest add button card --json | jq .data
+```
 
 ---
 
