@@ -652,7 +652,7 @@ Tools: `list_components` · `get_component_details` · `search_components` · `i
 For custom integrations that don't need MCP, use `--json` directly — it's stable, synchronous, and parseable with `JSON.parse(stdout)`:
 
 ```bash
-npx masicn add button card --json | jq .data
+npx masicn@latest add button card --json | jq .data
 ```
 
 ---
