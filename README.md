@@ -100,7 +100,7 @@ MyApp/
 ├── src/
 │   └── masicn/              ← the design system, fully local
 │       ├── tokens/
-│       ├── theme/
+│       ├── theme/           ← colors.ts (your palette) · light.ts · dark.ts · createTheme()
 │       ├── primitives/
 │       ├── hooks/
 │       ├── animation/
@@ -229,7 +229,7 @@ After `masicn init`, your project contains a full copy of the design system at `
 ```
 src/masicn/
 ├── tokens/       ← spacing, radius, borders, typography, motion, elevation, sizes, ...
-├── theme/        ← 15 palettes, createTheme(), dark/light mode
+├── theme/        ← colors.ts (your selected palette) · light.ts · dark.ts · createTheme()
 ├── primitives/   ← Box, Stack, Row, Text, Pressable, Surface, ...
 ├── hooks/        ← useTheme(), useTokens(), useReducedMotion(), ...
 ├── animation/    ← motionEasing (standard, accelerate, decelerate, linear)
@@ -501,9 +501,10 @@ npx masicn@latest add                        # interactive picker
 npx masicn@latest add --all                 # everything
 npx masicn@latest add button --dry-run      # preview without writing
 npx masicn@latest add button --force        # overwrite existing files
+npx masicn@latest add button --json         # { installed, skipped, errors, dryRun }
 ```
 
-Registry dependencies are resolved and installed automatically.
+Registry dependencies are resolved and installed automatically. `--json` requires explicit component names — the interactive picker is not supported in JSON mode.
 
 ### `update` — pull newer versions
 
@@ -513,6 +514,8 @@ npx masicn@latest update             # all installed components
 npx masicn@latest update -d          # refresh design system files from GitHub
 npx masicn@latest update -d --force  # refresh without confirmation
 ```
+
+When `-d` is used, `theme/palettes/` is never written. Only `theme/colors.ts` (your selected palette), `theme/light.ts`, and `theme/dark.ts` are refreshed.
 
 ### `remove` — uninstall a component
 
@@ -598,6 +601,8 @@ npx masicn@latest usage --json        # { scannedFiles, components[] } with file
 npx masicn@latest upgrade             # design system + all components
 npx masicn@latest upgrade --channel dev
 ```
+
+Refreshes the design system (same palette-safe behavior as `update -d`) then updates all installed components to their latest versions — in one step, non-interactively.
 
 ### `migrate` — apply breaking changes
 
