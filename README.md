@@ -771,6 +771,7 @@ const reducedMotion = useReducedMotion();
 - **npm (CLI):** [npmjs.com/package/masicn](https://www.npmjs.com/package/masicn)
 - **Registry:** [github.com/masicn-ui/registry](https://github.com/masicn-ui/registry)
 - **Author:** Manish Kumar — [manishh.in](https://manishh.in) · [@lordofthemind](https://github.com/lordofthemind)
+- **Social:** [@manishhwaaa](https://x.com/manishhwaaa) on X · [@manishhwaaa](https://instagram.com/manishhwaaa) on Instagram
 
 ---
 
