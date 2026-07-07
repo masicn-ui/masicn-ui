@@ -19,7 +19,7 @@ masicn is a shadcn/ui-style component system built for React Native. Instead of 
 - **One command to start:** `npx masicn@latest init` → picks a palette, copies the design system, installs native deps, downloads fonts.
 - **One command per component:** `npx masicn@latest add button` → `Button.tsx` lands in `src/shared/components/`.
 - **54 components · 19 blocks · 15 color palettes** — all built on Reanimated, strict TypeScript, full accessibility.
-- **Customize everything** — edit source directly, or use `createTheme()` to override any of 53 semantic color tokens.
+- **Customize everything** — edit source directly, or use `createTheme()` to override any of 49 semantic color tokens.
 - **No lock-in** — update on your schedule with `masicn update`, preview diffs with `masicn diff`.
 - **Machine-readable API** — every data command supports `--json` for clean, parseable output. Powers the built-in MCP server for AI tools (Claude, Cursor, etc.).
 
@@ -39,12 +39,7 @@ The **cn** suffix is a nod to shadcn/ui — the project that inspired this copy-
 
 ## Screenshots
 
-<!-- Replace with actual screenshots -->
-
-| | | |
-|---|---|---|
-| ![Screen 1](./screenshots/1.png) | ![Screen 2](./screenshots/2.png) | ![Screen 3](./screenshots/3.png) |
-| ![Screen 4](./screenshots/4.png) | ![Screen 5](./screenshots/5.png) | ![Screen 6](./screenshots/6.png) |
+Coming soon — screenshots will be captured from the [Gallery](https://github.com/masicn-ui/Gallery) showcase app once its screens are built out.
 
 ---
 
@@ -99,11 +94,10 @@ MyApp/
 │   └── fonts/               ← Inter, Poppins, Outfit .ttf files
 ├── src/
 │   └── masicn/              ← the design system, fully local
-│       ├── tokens/
+│       ├── tokens/          ← spacing, radius, typography, motion, motionEasing, elevation, ...
 │       ├── theme/           ← colors.ts (your palette) · light.ts · dark.ts · createTheme()
 │       ├── primitives/
 │       ├── hooks/
-│       ├── animation/
 │       ├── utils/
 │       └── system/
 ├── masicn.json
@@ -232,9 +226,8 @@ src/masicn/
 ├── theme/        ← colors.ts (your selected palette) · light.ts · dark.ts · createTheme()
 ├── primitives/   ← Box, Stack, Row, Text, Pressable, Surface, ...
 ├── hooks/        ← useTheme(), useTokens(), useReducedMotion(), ...
-├── animation/    ← motionEasing (standard, accelerate, decelerate, linear)
 ├── utils/        ← rgba(), clamp(), color helpers
-└── system/       ← MasicnProvider, Masicn (portal), PortalHost
+└── system/       ← MasicnProvider, Masicn (portal), PortalHost, ThemeToggle
 ```
 
 Every component you add imports from `'../../../masicn'` — never from any npm package. You can modify the design system itself without publishing anything.
@@ -382,7 +375,7 @@ Or use `masicn theme create` to generate a full 53-token palette interactively f
 
 #### Color tokens
 
-All 53 semantic color tokens available on `theme.colors.*`:
+All 49 semantic color tokens available on `theme.colors.*`:
 
 | Group | Tokens |
 |-------|--------|
@@ -620,7 +613,7 @@ npx masicn@latest theme create brand
 npx masicn@latest theme create brand --preview
 ```
 
-Interactively enter two brand colors (hex). Derives all 53 semantic tokens using `chroma-js`. Writes to `src/masicn/theme/palettes/<name>.ts`.
+Interactively enter two brand colors (hex). Derives all 49 semantic tokens using `chroma-js`. Writes to `src/masicn/theme/palettes/<name>.ts`.
 
 ```tsx
 import { brandPalette } from './masicn/theme/palettes/brand';
@@ -671,7 +664,7 @@ Created by `masicn init`. Edit it manually if needed.
 ```json
 {
   "version": "1",
-  "registry": "https://raw.githubusercontent.com/masicn-ui/registry/master/registry.json",
+  "registry": "https://masicn-ui.github.io/registry/registry.json",
   "outputDir": "src/shared/components",
   "importAlias": "@/shared/components",
   "blocksDir": "src/shared/blocks",
@@ -718,7 +711,7 @@ The trade-off: you're responsible for applying updates when you want them. `masi
 | **`reduceMotion`** | ✅ `useReducedMotion()` — every component | Depends on impl | ✅ Respects OS | ✅ Automatic | ❌ Not built-in |
 | **Accessibility** | `accessibilityRole` + `accessibilityLabel` + `accessibilityHint` — enforced | Good | Strong | Excellent (WCAG, 48dp) | Standard RN props only |
 | **TypeScript** | Strict — no `any`, no `@ts-ignore` | TypeScript-first v3 | Full type safety | Good | Partial |
-| **Custom themes** | `createTheme()` — 53 semantic tokens | NativeWind CSS vars | `createTamagui()` | `MD3LightTheme` override | Theme object |
+| **Custom themes** | `createTheme()` — 49 semantic tokens | NativeWind CSS vars | `createTamagui()` | `MD3LightTheme` override | Theme object |
 | **Components** | 54 + 19 blocks | 50+ | 50+ | 30+ | ~40 (not growing) |
 | **Web support** | ❌ RN only | ✅ NativeWind | ✅ First-class | ❌ RN only | ❌ RN only |
 
@@ -778,6 +771,7 @@ const reducedMotion = useReducedMotion();
 - **npm (CLI):** [npmjs.com/package/masicn](https://www.npmjs.com/package/masicn)
 - **Registry:** [github.com/masicn-ui/registry](https://github.com/masicn-ui/registry)
 - **Author:** Manish Kumar — [manishh.in](https://manishh.in) · [@lordofthemind](https://github.com/lordofthemind)
+- **Social:** [@manishhwaaa](https://x.com/manishhwaaa) on X · [@manishhwaaa](https://instagram.com/manishhwaaa) on Instagram
 
 ---
 
