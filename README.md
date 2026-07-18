@@ -1,8 +1,8 @@
-# masicn
+# masicn/ui
 
 > Copy-paste React Native UI components. Own the code. Ship faster.
 
-masicn is a shadcn/ui-style component system built for React Native. Instead of installing a black-box UI library, the CLI copies the source directly into your project — you own every line, full control, zero lock-in.
+masicn/ui is a shadcn/ui-style component system built for React Native. Instead of installing a black-box UI library, the CLI copies the source directly into your project — you own every line, full control, zero lock-in.
 
 **A personal project by [Manish Kumar](https://manishh.in) ([@lordofthemind](https://github.com/lordofthemind)) · currently at [skipp.co.in](https://skipp.co.in)**
 
@@ -21,7 +21,7 @@ masicn is a shadcn/ui-style component system built for React Native. Instead of 
 - **54 components · 19 blocks · 15 color palettes** — all built on Reanimated, strict TypeScript, full accessibility.
 - **Customize everything** — edit source directly, or use `createTheme()` to override any of 49 semantic color tokens.
 - **No lock-in** — update on your schedule with `masicn update`, preview diffs with `masicn diff`.
-- **Machine-readable API** — every data command supports `--json` for clean, parseable output. Powers the built-in MCP server for AI tools (Claude, Cursor, etc.).
+- **Machine-readable API** — 8 of the data commands support `--json` for clean, parseable output (see CLI Reference below for exactly which). Powers the built-in MCP server for AI tools (Claude, Cursor, etc.).
 
 ---
 
@@ -31,7 +31,7 @@ masicn is a shadcn/ui-style component system built for React Native. Instead of 
 
 **Masi** (मसि / मसी) means **ink** in Sanskrit and several Indian languages. Historically, Indian masi was prepared from charcoal, gum, and natural pigments — the medium through which ideas became permanent, words became records, and art became visible.
 
-> _"Just as ink can write anything — a poem, a law, a blueprint — masicn lets you build anything in React Native."_
+> _"Just as ink can write anything — a poem, a law, a blueprint — masicn/ui lets you build anything in React Native."_
 
 The **cn** suffix is a nod to shadcn/ui — the project that inspired this copy-paste philosophy.
 
@@ -45,7 +45,7 @@ Coming soon — screenshots will be captured from the [Gallery](https://github.c
 
 ## How It Works
 
-masicn is **not a library you install and import.** The CLI copies the design system and component source files directly into your project. Your project ends up with real, editable `.tsx` files — no hidden internals, no npm dependency to maintain.
+masicn/ui is **not a library you install and import.** The CLI copies the design system and component source files directly into your project. Your project ends up with real, editable `.tsx` files — no hidden internals, no npm dependency to maintain.
 
 ```
 npx masicn@latest init        ← sets up the design system in your project
@@ -67,11 +67,11 @@ After `add button`, you'll find `src/shared/components/Button.tsx` in your codeb
   npx @react-native-community/cli@latest init MyApp
   ```
 
-> **Expo is not supported yet.** masicn patches native config files (`babel.config.js`, `react-native.config.js`) in a way specific to bare React Native CLI projects. Expo support is planned.
+> **Expo is not supported yet.** masicn/ui patches native config files (`babel.config.js`, `react-native.config.js`) in a way specific to bare React Native CLI projects. Expo support is planned.
 
 ---
 
-### Step 1 — Initialize masicn
+### Step 1 — Initialize masicn/ui
 
 ```bash
 npx masicn@latest init
@@ -463,7 +463,7 @@ import {
 
 ## CLI Reference
 
-All commands support `--help` for inline docs. The data-returning commands (`list`, `search`, `info`, `add`, `status`, `diff`, `graph`, `usage`) also accept a global `--json` flag that switches stdout to a single deterministic JSON object — no colors, no spinners. See the [CLI README](../cli/README.md#machine-readable-output---json) for the full schema.
+All commands support `--help` for inline docs. The data-returning commands (`list`, `search`, `info`, `add`, `status`, `diff`, `graph`, `usage`) also accept a global `--json` flag that switches stdout to a single deterministic JSON object — no colors, no spinners. See the [CLI Reference](https://masicn.manishh.in/docs/cli#machine-readable-output-and-ai-friendliness) for the full schema.
 
 ### `init` — first-time setup
 
@@ -635,7 +635,7 @@ Browse all components in a grouped multiselect TUI, resolve deps, confirm, insta
 npx masicn@latest mcp
 ```
 
-Starts a [Model Context Protocol](https://modelcontextprotocol.io) server on `stdin/stdout`. It speaks JSON-RPC 2.0 and gives AI tools full read+write access to your masicn setup — browse, search, inspect, diff, check health, install, update, and remove components. Add to Claude Desktop (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+Starts a [Model Context Protocol](https://modelcontextprotocol.io) server on `stdin/stdout`. It speaks JSON-RPC 2.0 and gives AI tools full read+write access to your masicn/ui setup — browse, search, inspect, diff, check health, install, update, and remove components. Add to Claude Desktop (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
@@ -700,7 +700,7 @@ The trade-off: you're responsible for applying updates when you want them. `masi
 
 > Facts current as of 2026.
 
-| | masicn | Gluestack UI v3 | Tamagui | React Native Paper | NativeBase v3 |
+| | masicn/ui | Gluestack UI v3 | Tamagui | React Native Paper | NativeBase v3 |
 |---|---|---|---|---|---|
 | **Install model** | Copy-paste (CLI) | Copy-paste (CLI) | npm + compiler | npm + optional Babel plugin | npm — ⚠️ maintenance mode |
 | **Styling** | RN token objects | NativeWind / Tailwind | Compiler-extracted tokens | Material Design v3 theme | Theme object + utility props |
@@ -715,7 +715,7 @@ The trade-off: you're responsible for applying updates when you want them. `masi
 | **Components** | 54 + 19 blocks | 50+ | 50+ | 30+ | ~40 (not growing) |
 | **Web support** | ❌ RN only | ✅ NativeWind | ✅ First-class | ❌ RN only | ❌ RN only |
 
-**Pick masicn if** you want native-feeling components with zero styling-engine dependency, a local design system you can read and edit, and Reanimated animations baked in. Best for teams building a bespoke brand.
+**Pick masicn/ui if** you want native-feeling components with zero styling-engine dependency, a local design system you can read and edit, and Reanimated animations baked in. Best for teams building a bespoke brand.
 
 **Pick Gluestack UI v3 if** you're coming from NativeBase, want Tailwind utility classes, or need Expo SDK 53+ support right now.
 
@@ -727,7 +727,7 @@ The trade-off: you're responsible for applying updates when you want them. `masi
 
 ## How Components Are Built
 
-Every masicn component follows strict conventions:
+Every masicn/ui component follows strict conventions:
 
 **Tokens everywhere — no magic numbers:**
 ```tsx
@@ -779,7 +779,7 @@ const reducedMotion = useReducedMotion();
 
 [MIT](./LICENSE) — free to use, modify, and distribute. Copyright © 2026 [Manish Kumar](https://manishh.in).
 
-Everything in the masicn ecosystem — the CLI and all component source files — is MIT licensed. When you copy a component into your project, you own that code completely. Change it, ship it in a commercial product, or build on top of it without any restrictions.
+Everything in the masicn/ui ecosystem — the CLI and all component source files — is MIT licensed. When you copy a component into your project, you own that code completely. Change it, ship it in a commercial product, or build on top of it without any restrictions.
 
 ---
 
