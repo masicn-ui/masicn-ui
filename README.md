@@ -463,7 +463,7 @@ import {
 
 ## CLI Reference
 
-All commands support `--help` for inline docs. The data-returning commands (`list`, `search`, `info`, `add`, `status`, `diff`, `graph`, `usage`) also accept a global `--json` flag that switches stdout to a single deterministic JSON object — no colors, no spinners. See the [CLI Reference](https://masicn.manishh.in/docs/cli#machine-readable-output-and-ai-friendliness) for the full schema.
+All commands support `--help` for inline docs. The data-returning commands (`list`, `search`, `info`, `add`, `status`, `diff`, `graph`, `usage`) also accept a global `--json` flag that switches stdout to a single deterministic JSON object — no colors, no spinners. See the [CLI Reference](https://masicn.manishh.in/cli#machine-readable-output-and-ai-friendliness) for the full schema.
 
 ### `init` — first-time setup
 
